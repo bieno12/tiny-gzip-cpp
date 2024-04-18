@@ -22,7 +22,7 @@ all: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJS) $(LIBRARY)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(OBJS) $(LIBRARY)
 
-$(LIBRARY):
+$(LIBRARY): checklib
 	make -C lib/tinygzip
 
 .cpp.o:
@@ -32,5 +32,10 @@ clean:
 	rm -f $(OBJS) $(EXECUTABLE)
 	make -C lib/tinygzip clean
 
+checklib:
+	make -C lib/tinygzip
+
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
+
+re: clean all
