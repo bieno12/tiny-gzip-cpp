@@ -1,6 +1,10 @@
-#include "headers.h"
+#include "GZFile.h"
+#include <iomanip>
 
-
+GZFile::GZFile(string filename) {
+	open(filename);
+	readHeader();
+}
 bool GZFile::open(const string& filename) {
 	std::ifstream checkFile(filename);
 	file.open(filename, std::ios::binary);
@@ -23,11 +27,15 @@ GZFile::~GZFile() {
 		close();
 }
 void GZFile::readHeader() {
-	char header[10];
-	file.read(header, 10);
-	if (file.gcount() != 10 || header[0] != 0x1F || header[1] != 0x8B || header[2] != 8) {
+	uint8_t header[10];
+
+	file.read((char *)header, 10);
+	if (file.gcount() != 10)
 		throw InvalidGzipFileFormat("Invalid gzip file header");
-	}
+
+	if(header[0] != 0x1F || header[1] != 0x8B)
+		throw InvalidGzipFileFormat("Not a gzip file");
+
 	compressionMethod = header[2];
 	if(compressionMethod != 0x08)
 		throw InvalidGzipFileFormat("Invalid Compression method " + to_string(compressionMethod));
@@ -60,4 +68,21 @@ void GZFile::readHeader() {
 bool GZFile::getFlag(FLAG_BIT bit)
 {
 	return (flags & (1 << bit)) != 0;
+}
+
+void GZFile::printHeader() {
+
+    std::cout << "Compression Method: " << static_cast<int>(compressionMethod) << std::endl;
+
+    // Print flags using their names
+    std::cout << "Flags:" << std::endl;
+    if (getFlag(FTEXT)) std::cout << "  FTEXT" << std::endl;
+    if (getFlag(FHCRC)) std::cout << "  FHCRC" << std::endl;
+    if (getFlag(FEXTRA)) std::cout << "  FEXTRA" << std::endl;
+    if (getFlag(FNAME)) std::cout << "  FNAME" << std::endl;
+    if (getFlag(FCOMMENT)) std::cout << "  FCOMMENT" << std::endl;
+
+    std::cout << "Modification Time: " << modificationTime << std::endl;
+    std::cout << "Extra Flags: " << static_cast<int>(extraFlags) << std::endl;
+    std::cout << "Operating System: " << static_cast<int>(operatingSystem) << std::endl;
 }

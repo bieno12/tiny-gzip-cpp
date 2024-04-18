@@ -1,12 +1,12 @@
-#pragma once
+#ifndef GZFILE_H
+#define GZFILE_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <stdexcept>
 #include <cstring>
 using namespace std;
-
-
 class InvalidGzipFileFormat : public std::runtime_error {
 public:
     InvalidGzipFileFormat(const std::string& message)
@@ -30,15 +30,17 @@ private:
     uint8_t extraFlags;        // Extra flags
     uint8_t operatingSystem;   // Operating system
 public:
-    GZFile(string filename) {
-		open(filename);
-	}
+    GZFile(string filename);
     bool open(const string& filename);
     int read(char* buffer, int size);
     void close();
     ~GZFile();
+
+	void printHeader();
 private:
     void readHeader();
 	bool getFlag(FLAG_BIT bit);
 
 };
+
+#endif
