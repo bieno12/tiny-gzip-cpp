@@ -13,34 +13,29 @@ public:
         : std::runtime_error(message) {}
 };
 
-class GZFile {
+class GZFile : public ifstream {
 private:
-	enum FLAG_BIT {
+	enum GZ_FLAG_BIT {
 		FTEXT,
 		FHCRC,
 		FEXTRA,
 		FNAME,
 		FCOMMENT,
 	};
-    std::ifstream file; // Input file stream
-    bool validHeader;   // Flag to indicate if the header is valid
-    uint8_t compressionMethod; // Compression method
-	uint8_t flags;
-    uint32_t modificationTime; // Modification time
-    uint8_t extraFlags;        // Extra flags
-    uint8_t operatingSystem;   // Operating system
+    bool gz_validHeader;   // Flag to indicate if the header is valid
+    uint8_t gz_compressionMethod; // Compression method
+	uint8_t gz_flags;
+    uint32_t gz_modificationTime; // Modification time
+    uint8_t gz_extraFlags;        // Extra flags
+    uint8_t gz_operatingSystem;   // Operating system
 public:
-    GZFile(string filename);
-    bool open(const string& filename);
-    int read(char* buffer, int size);
-    void close();
-    ~GZFile();
+    GZFile(const string& filename);
+    void open(const string& filename);
 
 	void printHeader();
 private:
     void readHeader();
-	bool getFlag(FLAG_BIT bit);
-
+	bool getFlag(GZ_FLAG_BIT bit);
 };
 
 #endif

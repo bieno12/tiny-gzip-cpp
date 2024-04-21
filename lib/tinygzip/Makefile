@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -Wextra -std=c++11
 # Include directories
 INCLUDES = -I.
 # Source files
-SRCS = tinygzip.cpp GZFile.cpp
+SRCS = tinygzip.cpp GZFile.cpp inflate.cpp deflate.cpp
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 # Library name
