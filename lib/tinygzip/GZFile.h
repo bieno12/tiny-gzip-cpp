@@ -28,6 +28,8 @@ private:
     uint32_t gz_modificationTime; // Modification time
     uint8_t gz_extraFlags;        // Extra flags
     uint8_t gz_operatingSystem;   // Operating system
+
+	string originalFilename;
 public:
     GZFile(const string& filename);
     void open(const string& filename);

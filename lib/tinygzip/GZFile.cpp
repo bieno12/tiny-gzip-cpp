@@ -41,7 +41,12 @@ void GZFile::readHeader() {
 	}
 	if (getFlag(FNAME)) {
 		// Skip original filename (it is null terminated)
-		ignore(256, '\0');
+		char c; read(&c, 1);
+		while(c != '\0')
+		{
+			originalFilename.push_back(c);
+			read(&c, 1);
+		}
 	}
 	if (getFlag(FCOMMENT)) {
 		// Skip null terminated comment
@@ -67,7 +72,7 @@ void GZFile::printHeader() {
     if (getFlag(FTEXT)) std::cout << "  FTEXT" << std::endl;
     if (getFlag(FHCRC)) std::cout << "  FHCRC" << std::endl;
     if (getFlag(FEXTRA)) std::cout << "  FEXTRA" << std::endl;
-    if (getFlag(FNAME)) std::cout << "  FNAME" << std::endl;
+    if (getFlag(FNAME)) std::cout << "  FNAMEL " << originalFilename << std::endl;
     if (getFlag(FCOMMENT)) std::cout << "  FCOMMENT" << std::endl;
 
     std::cout << "Modification Time: " << gz_modificationTime << std::endl;
